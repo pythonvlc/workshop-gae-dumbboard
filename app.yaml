@@ -1,0 +1,19 @@
+application: dumbboard-pythonvlc
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /css
+  static_dir: templates/css
+
+- url: /js
+  static_dir: templates/js
+
+- url: /fonts
+  static_dir: templates/fonts
+
+- url: .*
+  script: main.app
+

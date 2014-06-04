@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="jumbotron">
+      <form method="POST" role="form">
+          <div class="form-group">
+              <textarea class="form-control" rows="3" name="title" placeholder="en qué estás pensando?"></textarea>
+          </div>
+           <div class="form-group">
+            <label for="media_url">acompañalo de una imagen</label>
+            <input type="text" name="media_url" placeholder="http://..."/>
+           </div>
+
+          <input type="submit" class="btn btn-primary" value="publicar"/>
+      </form>
+      <img src="{{ post.media_url }}" alt="{{ post.title }}"/>
+      <h1>{{ post.title }}</h1>
+  </div>
+
+{% endblock content %}

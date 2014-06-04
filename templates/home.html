@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+
+<a href="/post/create" class="btn btn-primary">Tengo algo que decir...</a> <br/><br/>
+</div>
+{% for post in posts %}
+  <div class="jumbotron post">
+      <img src="{{ post.media_url }}" alt="{{ post.title }}"/>
+      <h3>{{ post.title }}</h3>
+      <div>
+          <span class="glyphicon glyphicon-heart"></span> {{ post.likes }}
+          &nbsp;
+      </div>
+  </div>
+{% empty %}
+    No se han encontrado publicaciones
+{% endfor %}
+
+{% endblock content %}

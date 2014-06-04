@@ -1,0 +1,9 @@
+#python
+*.pyc
+
+#Pycharm and other hidden files
+.idea
+*.DS_Store
+*.swp
+*.out
+
