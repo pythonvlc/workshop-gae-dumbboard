@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="jumbotron post">
+      <img src="{{ post.media_url }}" alt="{{ post.title }}"/>
+      <h3>{{ post.title }}</h3>
+      <div>
+          <a href="{{ post.get_absolute_url }}/like">
+            <span class="glyphicon glyphicon-heart"></span> {{ post.likes|default:"0" }}
+          </a>
+          &nbsp;
+          <a href="{{ post.get_absolute_url }}">
+            <span class="glyphicon glyphicon-comment"></span> {{ post.comment_count|default:"0" }}
+          </a>
+      </div>
+
+      <em class="pull-right">{{ post.date|timesince }} ago</em>
+  </div>
+
+  {% for c in post.get_comments %}
+        <div class="comment">
+            <p>{{ c.text }}</p>
+            <em class="pull-right">{{ c.date|timesince }} ago</em> &nbsp;
+        </div>
+  {% empty %}
+    <div class="comment">Sin comentarios. Quieres ser el primero en opinar?</div>
+  {% endfor %}
+  <div class="comment">
+      <form method="post">
+          <textarea name="text" cols="60" rows="2" placeholder="Y tu qué opinas?"></textarea>
+          <input type="submit" value="Enviar" class="btn btn-xs btn-primary"/>
+      </form>
+  </div>
+
+{% endblock content %}
