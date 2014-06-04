@@ -14,6 +14,9 @@ handlers:
 - url: /fonts
   static_dir: templates/fonts
 
+- url: /backburner/.*
+  script: backburner.app
+
 - url: .*
   script: main.app
 

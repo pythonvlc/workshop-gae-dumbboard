@@ -14,13 +14,22 @@
           </a>
       </div>
 
-      <em class="pull-right">{{ post.date|timesince }} ago</em>
+      <div class="clearfix">
+          <em class="pull-right">{{ post.date|timesince }} ago</em>
+          <a class="pull-left btn btn-danger btn-sm" href="{{ post.get_absolute_url }}/delete">
+              <span class="glyphicon glyphicon-trash"></span>
+          </a>
+      </div>
   </div>
 
-  {% for c in post.get_comments %}
+  {% for c in comments %}
         <div class="comment">
+            <a class="pull-right btn btn-danger btn-xs" href="/comment/{{ c.key.id }}/delete">
+              <span class="glyphicon glyphicon-trash"></span>
+            </a>
             <p>{{ c.text }}</p>
             <em class="pull-right">{{ c.date|timesince }} ago</em> &nbsp;
+
         </div>
   {% empty %}
     <div class="comment">Sin comentarios. Quieres ser el primero en opinar?</div>

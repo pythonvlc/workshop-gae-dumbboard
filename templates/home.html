@@ -20,7 +20,9 @@
             <span class="glyphicon glyphicon-comment"></span> {{ post.comment_count|default:"0" }}
         </a>
     </div>
-    <em class="pull-right">{{ post.date|timesince }} ago</em>
+    <div class="clearfix">
+       <em class="pull-right">{{ post.date|timesince }} ago</em>
+    </div>
   </div>
 {% empty %}
     No se han encontrado publicaciones

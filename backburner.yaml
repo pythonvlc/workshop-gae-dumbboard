@@ -1,0 +1,12 @@
+application: dumbboard-pythonvlc
+version: 1
+runtime: python27
+api_version: 1
+module: backburner
+instance_class: B2
+
+basic_scaling:
+  max_instances: 11
+  idle_timeout: 10m
+
+
