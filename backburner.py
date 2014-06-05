@@ -1,9 +1,11 @@
 import logging
 
-from google.appengine.api import urlfetch, files
-from google.appengine.api.images import Image, JPEG, get_serving_url
+from google.appengine.api import urlfetch, files, taskqueue
+from google.appengine.api.images import Image, PNG, JPEG, get_serving_url
 from google.appengine.ext.webapp import RequestHandler, WSGIApplication
 from google.appengine.ext.ndb import Key
+
+from models import Post
 
 
 class MediaDownloader(RequestHandler):
@@ -18,8 +20,7 @@ class MediaDownloader(RequestHandler):
         if post:
             result = urlfetch.fetch(post.media_url)
             if result.status_code == 200:
-
-                post.media_url = store_picture_from_content(result.content, result.headers['content-type'])
+                post.media_url, post.media_key = store_picture_from_content(result.content, result.headers['content-type'])
                 post.put()
                 logging.info("Post media uploaded to url {}".format(post.media_url))
             else:
@@ -29,11 +30,20 @@ class MediaDownloader(RequestHandler):
             logging.info("Post not found: {}".format(post_safekey))
 
 
+class DownloadMissingMediaJob(RequestHandler):
+    def get(self):
+        query = Post.query(Post.media_key == None)
+        for post_key in query.iter(keys_only=True):
+            taskqueue.add(url='/backburner/download_post_media',
+                          params={'post': post_key.urlsafe()})
+
+
 def store_picture_from_content(content, mime_type='application/octet-stream'):
     img = Image(content)
     img.resize(width=800, height=800)
     img.im_feeling_lucky()
-    img = img.execute_transforms(output_encoding=JPEG)
+    img_type = PNG if 'png' in mime_type else JPEG
+    img = img.execute_transforms(output_encoding=img_type)
 
     # create file
     file_name = files.blobstore.create(mime_type=mime_type)
@@ -45,9 +55,10 @@ def store_picture_from_content(content, mime_type='application/octet-stream'):
 
     # Get the file's blob key
     blob_key = files.blobstore.get_blob_key(file_name)
-    return get_serving_url(blob_key)
+    return get_serving_url(blob_key), blob_key
 
 
 app = WSGIApplication([
         ('/backburner/download_post_media', MediaDownloader),
+        ('/backburner/download_missing', DownloadMissingMediaJob),
 ], debug=True)

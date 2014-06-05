@@ -10,6 +10,7 @@ class Post(ndb.Model):
     media_url = ndb.StringProperty()
     likes = ndb.IntegerProperty(default=0)
     date = ndb.DateTimeProperty(auto_now_add=True)
+    media_key = ndb.BlobKeyProperty()
 
     def get_comments(self):
         return Comment.query(Comment.post == self.key)

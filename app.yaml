@@ -16,6 +16,12 @@ handlers:
 
 - url: /backburner/.*
   script: backburner.app
+  login: admin
+
+
+- url: /test.*
+  script: main.app
+  login: admin
 
 - url: .*
   script: main.app

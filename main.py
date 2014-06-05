@@ -5,6 +5,7 @@ from google.appengine.api import taskqueue
 
 from os.path import join, dirname
 from models import Post, ndb, Comment
+from unittestrunner import run_from_gae
 
 
 class MainHandler(RequestHandler):
@@ -79,6 +80,12 @@ class CommentDeleteHandler(RequestHandler):
             self.redirect('/')
 
 
+class RunTestHandler(RequestHandler):
+    def get(self):
+        result = run_from_gae()
+        self.response.out.write(result.replace('\n', '<br/>'))
+
+
 app = WSGIApplication([
     ('/hello', MainHandler),
     ('/', HomeHandler),
@@ -87,6 +94,7 @@ app = WSGIApplication([
     (r'/post/(?P<post_id>\d+)', PostHandler),
     (r'/post/(?P<post_id>\d+)/like', LikePostHandler),
     (r'/comment/(?P<comment_id>\d+)/delete', CommentDeleteHandler),
+    (r'/test', RunTestHandler),
 ], debug=True)
 
 
